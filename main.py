@@ -33,7 +33,7 @@ FROM_EMAIL = os.getenv("FROM_EMAIL")
 
 # Mapping client IDs to recipient emails
 CLIENT_EMAIL_MAP = {
-    "square": "berat.ademi@gmail.com",
+    "square": "squareconstruction.ul@gmail.com",
     "ClientB": "clientB@example.com",
     # Add more clients as needed
 }
