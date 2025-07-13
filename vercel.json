@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/send_email.py": {
+      "runtime": "python3.9"
+    }
+  }
+}
