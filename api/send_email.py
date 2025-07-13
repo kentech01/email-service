@@ -1,5 +1,6 @@
 import os
 import logging
+import traceback
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, EmailStr, Field
 import httpx
@@ -65,37 +66,45 @@ async def verify_recaptcha(token: str) -> bool:
         logging.info(f"reCAPTCHA response: {result}")
         return result.get("success", False)  # For v2 Invisible
 
-@app.post("/send-email")
-async def send_email(form: ContactForm):
-    try:
-        if not await verify_recaptcha(form.recaptcha_token):
-            raise HTTPException(status_code=400, detail="reCAPTCHA validation failed")
 
-        to_email = CLIENT_EMAIL_MAP.get(form.client_id)
-        if not to_email:
-            raise HTTPException(status_code=400, detail="Unknown client_id")
+@app.get("/")
+async def root():
+    return {"message": "Hello from FastAPI on Vercel!"}
 
-        html_template = templates_env.get_template("email_template.html")
-        plain_template = templates_env.get_template("email_template.txt")
 
-        html_content = html_template.render(name=form.name, email=form.email, message=form.message)
-        plain_text = plain_template.render(name=form.name, email=form.email, message=form.message)
+# @app.post("/send-email")
+# async def send_email(form: ContactForm):
+#     try:
+#         if not await verify_recaptcha(form.recaptcha_token):
+#             raise HTTPException(status_code=400, detail="reCAPTCHA validation failed")
 
-        subject = f"New Contact Form Submission from {form.name}"
+#         to_email = CLIENT_EMAIL_MAP.get(form.client_id)
+#         if not to_email:
+#             raise HTTPException(status_code=400, detail="Unknown client_id")
 
-        sent = email_provider.send_email(
-            subject=subject,
-            to_email=to_email,
-            from_email=FROM_EMAIL,
-            plain_text=plain_text,
-            html_content=html_content,
-            reply_to=form.email,
-        )
+#         html_template = templates_env.get_template("email_template.html")
+#         plain_template = templates_env.get_template("email_template.txt")
 
-        if not sent:
-            raise HTTPException(status_code=500, detail="Failed to send email")
+#         html_content = html_template.render(name=form.name, email=form.email, message=form.message)
+#         plain_text = plain_template.render(name=form.name, email=form.email, message=form.message)
 
-        return {"status": "success"}
-    except Exception as e:
-        logging.error(f"Exception in send_email: {e}")
-        raise
+#         subject = f"New Contact Form Submission from {form.name}"
+
+#         sent = email_provider.send_email(
+#             subject=subject,
+#             to_email=to_email,
+#             from_email=FROM_EMAIL,
+#             plain_text=plain_text,
+#             html_content=html_content,
+#             reply_to=form.email,
+#         )
+
+#         if not sent:
+#             raise HTTPException(status_code=500, detail="Failed to send email")
+
+#         return {"status": "success"}
+
+#     except Exception as e:
+#         logging.error(f"Exception in send_email: {e}")
+#         logging.error(traceback.format_exc())
+#         raise HTTPException(status_code=500, detail="Internal server error")
