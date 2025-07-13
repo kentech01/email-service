@@ -6,4 +6,3 @@ boto3
 jinja2
 httpx
 pydantic[email]
-mangum

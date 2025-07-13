@@ -107,8 +107,3 @@ async def send_email(form: ContactForm):
     except Exception as e:
         logging.error(f"Exception in send_email: {e}")
         logging.error(traceback.format_exc())
-        raise HTTPException(status_code=500, detail="Internal server error")
-    
-from mangum import Mangum
-
-handler = Mangum(app)
