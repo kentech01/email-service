@@ -3,7 +3,6 @@ import logging
 import traceback
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, EmailStr, Field
-import httpx
 from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from fastapi.middleware.cors import CORSMiddleware
@@ -57,14 +56,14 @@ class ContactForm(BaseModel):
     message: str = Field(..., min_length=1, max_length=1000)
     recaptcha_token: str
 
-async def verify_recaptcha(token: str) -> bool:
-    url = "https://www.google.com/recaptcha/api/siteverify"
-    data = {"secret": RECAPTCHA_SECRET, "response": token}
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url, data=data)
-        result = response.json()
-        logging.info(f"reCAPTCHA response: {result}")
-        return result.get("success", False)  # For v2 Invisible
+# async def verify_recaptcha(token: str) -> bool:
+#     url = "https://www.google.com/recaptcha/api/siteverify"
+#     data = {"secret": RECAPTCHA_SECRET, "response": token}
+#     async with httpx.AsyncClient() as client:
+#         response = await client.post(url, data=data)
+#         result = response.json()
+#         logging.info(f"reCAPTCHA response: {result}")
+#         return result.get("success", False)  # For v2 Invisible
 
 
 @app.get("/")
