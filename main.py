@@ -28,13 +28,13 @@ app.add_middleware(
 )
 
 RECAPTCHA_SECRET = os.getenv("RECAPTCHA_SECRET")
-EMAIL_PROVIDER_NAME = os.getenv("EMAIL_PROVIDER", "sendgrid")
+EMAIL_PROVIDER_NAME = os.getenv("EMAIL_PROVIDER")
 FROM_EMAIL = os.getenv("FROM_EMAIL")
 
 # Mapping client IDs to recipient emails
 CLIENT_EMAIL_MAP = {
     "square": "squareconstruction.ul@gmail.com",
-    "ClientB": "clientB@example.com",
+    "thrio_site": "hello@thrio.co",
     # Add more clients as needed
 }
 
