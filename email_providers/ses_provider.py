@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 import boto3
 from botocore.exceptions import ClientError
 from .base import BaseEmailProvider
@@ -8,7 +9,7 @@ class SESProvider(BaseEmailProvider):
     def __init__(self):
         self.aws_access_key = os.getenv("AWS_ACCESS_KEY_ID")
         self.aws_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
-        self.region = os.getenv("AWS_REGION", "us-east-1")
+        self.region = os.getenv("AWS_REGION")
         if not all([self.aws_access_key, self.aws_secret_key]):
             raise RuntimeError("AWS credentials not set")
 
@@ -26,7 +27,7 @@ class SESProvider(BaseEmailProvider):
         from_email: str,
         plain_text: str,
         html_content: str,
-        reply_to: str | None = None,
+        reply_to: Optional[str] = None,
     ) -> bool:
         try:
             params = {
